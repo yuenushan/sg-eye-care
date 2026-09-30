@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { width: 320px; margin: 0; background: #15151a; color: #e9e9e9;
+    font: 13px/1.5 system-ui, -apple-system, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+  .card { padding: 16px; }
+  .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .title { font-weight: 700; letter-spacing: .5px; font-size: 14px; }
+  .switch { position: relative; width: 42px; height: 23px; flex: none; }
+  .switch input { display: none; }
+  .track { position: absolute; inset: 0; background: #3a3d44; border-radius: 99px; cursor: pointer; transition: .15s; }
+  .track:before { content: ''; position: absolute; width: 17px; height: 17px; left: 3px; top: 3px;
+    background: #fff; border-radius: 50%; transition: .15s; }
+  .switch input:checked + .track { background: #ff9d3f; }
+  .switch input:checked + .track:before { transform: translateX(19px); }
+  .badge { font-size: 11px; color: #ffb066; background: rgba(255,157,63,.12);
+    border: 1px solid rgba(255,157,63,.25); padding: 1px 9px; border-radius: 99px; }
+  .presets { display: flex; gap: 8px; margin-bottom: 14px; }
+  .preset-btn { flex: 1; height: 36px; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.05);
+    color: #cfcfcf; border-radius: 9px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .preset-btn:hover { background: rgba(255,255,255,.1); }
+  .preset-btn.on { background: #ff9d3f; color: #15161a; border-color: transparent; }
+  .lab { display: flex; justify-content: space-between; margin-bottom: 3px; }
+  .lab span { color: #9a9a9a; font-size: 12px; }
+  .lab b { color: #ffb066; font-weight: 600; }
+  .srow { display: flex; align-items: center; gap: 7px; margin-bottom: 12px; }
+  .step-btn { width: 26px; height: 26px; flex: none; background: rgba(255,255,255,.07); color: #ddd;
+    border: 1px solid rgba(255,255,255,.12); border-radius: 7px; cursor: pointer; font-size: 14px; line-height: 1; }
+  .step-btn:hover { background: rgba(255,255,255,.13); }
+  input[type=range] { flex: 1; accent-color: #ff9d3f; }
+  .site-row { display: flex; align-items: center; gap: 8px; padding: 10px 12px; margin: 4px -4px 0;
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07); border-radius: 9px; }
+  .site-row input { accent-color: #ff9d3f; }
+  .site-name { color: #bbb; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .grayed { opacity: .4; pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="head">
+    <span class="title">SG 护眼</span>
+    <span class="badge" id="mode">-</span>
+    <label class="switch"><input type="checkbox" id="sw"><span class="track"></span></label>
+  </div>
+  <div id="panelBody">
+    <div class="presets">
+      <button class="preset-btn" data-p="day" title="明亮办公室 · 22/3">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.2 5.2l1.7 1.7M17.1 17.1l1.7 1.7M18.8 5.2l-1.7 1.7M6.9 17.1l-1.7 1.7"/></svg>
+      </button>
+      <button class="preset-btn" data-p="eve" title="室内灯光 · 47/10">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 18h5.6M10.2 21h3.6"/><path d="M12 2.6a6.4 6.4 0 0 1 3.9 11.5c-.8.6-1.3 1.3-1.5 2.4h-4.8c-.2-1.1-.7-1.8-1.5-2.4A6.4 6.4 0 0 1 12 2.6z"/></svg>
+      </button>
+      <button class="preset-btn" data-p="night" title="关灯房间 · 67/22">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 13.6A8.5 8.5 0 1 1 10.4 3.6a6.9 6.9 0 0 0 10 10z"/></svg>
+      </button>
+    </div>
+    <div class="lab"><span>色温</span><b id="vt">0</b></div>
+    <div class="srow">
+      <button class="step-btn" data-target="t" data-d="-1">−</button>
+      <input type="range" id="t" min="0" max="100" value="0">
+      <button class="step-btn" data-target="t" data-d="1">+</button>
+    </div>
+    <div class="lab"><span>调光</span><b id="vd">0</b></div>
+    <div class="srow">
+      <button class="step-btn" data-target="d" data-d="-1">−</button>
+      <input type="range" id="d" min="0" max="100" value="0">
+      <button class="step-btn" data-target="d" data-d="1">+</button>
+    </div>
+    <div class="site-row" id="siteRow" style="display:none">
+      <input type="checkbox" id="siteChk">
+      <span class="site-name" id="site"></span>
+      <span style="color:#777;font-size:11px;flex:none">此站不启用</span>
+    </div>
+  </div>
+</div>
+<script src="popup.js"></script>
+</body>
+</html>
